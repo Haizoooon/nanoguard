@@ -19,7 +19,8 @@
     "kick_message": "\n<red>You have been kicked for using a VPN or proxy.</red>\n<gray>If you believe this is a mistake, please contact the server staff.</gray>\n",
     "notify_message": "%prefix% <b><red>%player%</red></b> <gray> was detected using a proxy or a vpn! <i>Hover for more information.</i></gray>",
     "notify_enabled": "<#aaaaaa>Notifications are <green>enabled</green></#aaaaaa>",
-    "notify_disabled": "<#aaaaaa>Notifications are <red>disabled</red></#aaaaaa>"
+    "notify_disabled": "<#aaaaaa>Notifications are <red>disabled</red></#aaaaaa>",
+    "reloaded": "<gray>The config was <#aaaaaa>successfully</#aaaaaa> reloaded!</gray>"
   },
   "permissions": {
     "bypass": "nanoguard.bypass",

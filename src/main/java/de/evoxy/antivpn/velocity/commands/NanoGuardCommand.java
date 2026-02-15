@@ -72,6 +72,8 @@ public class NanoGuardCommand implements SimpleCommand {
                     source.sendMessage(message.deserialize(defaultConfig.prefix + " <#ff5555>Database is disabled. Cannot retrieve blocked IP addresses.</#ff5555>"));
                 }
                 return;
+            } else if(args[0].equalsIgnoreCase("reload")){
+                NanoGuardMain.getInstance().setConfigConfigManager(NanoGuardMain.getInstance().getConfigConfigManager());
             }
         }
 
@@ -86,6 +88,7 @@ public class NanoGuardCommand implements SimpleCommand {
             suggestions.add("notify");
             suggestions.add("blocked");
             suggestions.add("whitelist");
+            suggestions.add("reload");
         } else if(args.length == 2 && args[0].equalsIgnoreCase("whitelist")){
             suggestions.add("list");
             suggestions.add("add");
