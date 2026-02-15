@@ -1,0 +1,33 @@
+{
+  "prefix": "<b><white>Nano<red>Guard</red></white></b> <gray>→</gray> ",
+  "notifyEnabled": true,
+  "restServer": {
+    "enabled": true,
+    "port": 7922
+  },
+  "api_key": "",
+  "database": {
+    "enabled": true,
+    "host": "localhost",
+    "port": 3306,
+    "database": "nanoguard",
+    "username": "root",
+    "password": "password"
+  },
+  "messages": {
+    "no_permissions": "You do not have permission to use this command.",
+    "kick_message": "\n<red>You have been kicked for using a VPN or proxy.</red>\n<gray>If you believe this is a mistake, please contact the server staff.</gray>\n",
+    "notify_message": "%prefix% <b><red>%player%</red></b> <gray> was detected using a proxy or a vpn! <i>Hover for more information.</i></gray>",
+    "notify_enabled": "<#aaaaaa>Notifications are <green>enabled</green></#aaaaaa>",
+    "notify_disabled": "<#aaaaaa>Notifications are <red>disabled</red></#aaaaaa>"
+  },
+  "permissions": {
+    "bypass": "nanoguard.bypass",
+    "notify": "nanoguard.notify",
+    "command": "nanoguard.command"
+  },
+  "discord": {
+    "webhook_enabled": false,
+    "webhook_url": "https://discord.com/api/webhooks/your_webhook_url"
+  }
+}

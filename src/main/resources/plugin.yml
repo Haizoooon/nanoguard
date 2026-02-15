@@ -1,0 +1,9 @@
+name: NanoGuard
+version: 1.0.0
+main: de.evoxy.antivpn.papermc.NanoGuardPaperMain
+author: Haizon
+api-version: 1.21.11
+
+commands:
+    nanoguard:
+        description: Main command for NanoGuard
