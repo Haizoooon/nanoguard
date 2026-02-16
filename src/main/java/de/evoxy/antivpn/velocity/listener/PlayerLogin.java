@@ -13,7 +13,6 @@ import de.evoxy.antivpn.velocity.NanoGuardVelocityMain;
 import de.evoxy.flux.query.Query;
 import de.evoxy.flux.stores.DataStore;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +46,7 @@ public class PlayerLogin {
 
         if(isWhitelisted) return;
 
-        boolean flagged = VpnChecker.checkVpn(address, nanoPlayer).join();
+        boolean flagged = VpnChecker.checkVpn(address, nanoPlayer).join().flagged();
 
         if(!flagged) return;
 
@@ -68,7 +67,7 @@ public class PlayerLogin {
 
             NanoGuardVelocityMain.getInstance().getProxyServer().getAllPlayers().forEach(player -> {
                 if(player.hasPermission(NanoGuardMain.getInstance().getDefaultConfig().permissions.notify)){
-                    player.sendMessage(miniMessage.deserialize(message, Placeholder.parsed("hover", hoverText)));
+                    player.sendMessage(miniMessage.deserialize("<hover:show_text:'" + hoverText + "'>" + message + "</hover>"));
                 }
             });
 

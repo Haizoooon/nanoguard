@@ -23,33 +23,34 @@ public class VpnChecker {
     private static final String API_URL = "https://proxycheck.io/v3/";
     private static final int TIMEOUT = 2000;
 
-    public static CompletableFuture<Boolean> checkVpn(String ip, NanoPlayer nanoPlayer) {
+    public static CompletableFuture<VpnResult> checkVpn(String ip, NanoPlayer nanoPlayer) {
         return CompletableFuture.supplyAsync(() -> {
             try {
 
                 if(!new Query<>(BlockedAddressesTable.class, NanoGuardMain.getInstance().getDataStore()).where("address", ip).execute().isEmpty()){
-                    return true;
+                    return nullResult();
                 }
 
                 JsonObject responseJson = fetchIpData(ip);
                 System.out.println("API Response: " + responseJson);
                 if (responseJson == null || !"ok".equalsIgnoreCase(responseJson.get("status").getAsString())) {
-                    return false;
+                    return nullResult();
                 }
 
                 JsonObject ipData = responseJson.getAsJsonObject(ip);
                 JsonObject detections = ipData.getAsJsonObject("detections");
 
-                boolean flagged = detections.get("proxy").getAsBoolean() || detections.get("vpn").getAsBoolean();
+                boolean flagged = detections.get("proxy").getAsBoolean() || detections.get("vpn").getAsBoolean() || detections.get("tor").getAsBoolean();
 
                 if (flagged) {
                     handleDatabaseEntry(ip, nanoPlayer.uniqueId(), ipData);
                 }
 
-                return flagged;
+                //TODO: remove second save block.
+                return saveNewBlockedAddress(ip, responseJson);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-                return false;
+                return null;
             }
         });
     }
@@ -72,21 +73,42 @@ public class VpnChecker {
                 .where("address", ip)
                 .execute().stream().findFirst();
 
-        String addressId = existing.map(table -> table.id).orElseGet(() -> saveNewBlockedAddress(ip, ipData));
+        String addressId = existing.map(table -> table.id).orElseGet(() -> saveNewBlockedAddress(ip, ipData).vpnResultId());
         saveCaughtPlayer(addressId, uuid);
     }
 
-    private static String saveNewBlockedAddress(String ip, JsonObject ipData) {
+    private static VpnResult saveNewBlockedAddress(String ip, JsonObject ipData) {
         String id = UUID.randomUUID().toString();
         JsonObject loc = ipData.getAsJsonObject("location");
         JsonObject det = ipData.getAsJsonObject("detections");
 
+        String continentName, continentCode, countryName, countryCode;
+        boolean isProxy, isVpn, isTor, flagged;
+        int risk;
+
+        continentName = loc.get("continent_name").getAsString();
+        continentCode = loc.get("continent_code").getAsString();
+        countryName = loc.get("country_name").getAsString();
+        countryCode = loc.get("country_code").getAsString();
+
+        isProxy = det.get("proxy").getAsBoolean();
+        isVpn = det.get("vpn").getAsBoolean();
+        isTor = det.get("tor").getAsBoolean();
+
+        risk = det.get("risk").getAsInt();
+
         JsonObject info = new JsonObject();
-        info.addProperty("continent_code", loc.get("continent_code").getAsString());
-        info.addProperty("country_name", loc.get("country_name").getAsString());
-        info.addProperty("is_proxy", det.get("proxy").getAsBoolean());
-        info.addProperty("is_vpn", det.get("vpn").getAsBoolean());
+        info.addProperty("continent_name", continentName);
+        info.addProperty("continent_code", continentCode);
+        info.addProperty("country_name", countryName);
+        info.addProperty("country_code", countryCode);
+        info.addProperty("is_proxy", isProxy);
+        info.addProperty("is_vpn", isVpn);
+        info.addProperty("is_tor", isTor);
+        info.addProperty("risk", risk);
         info.addProperty("operator_name", ipData.get("operator").getAsJsonObject().get("name").getAsString());
+
+        flagged = isVpn || isTor || isProxy;
 
         BlockedAddressesTable entry = new BlockedAddressesTable();
         entry.id = id;
@@ -95,9 +117,13 @@ public class VpnChecker {
         entry.information = info.toString();
 
         NanoGuardMain.getInstance().getDataStore().save(entry);
-        return id;
+        return new VpnResult(id, continentName, continentCode, countryName, countryCode, isProxy, isVpn, isTor, flagged, risk);
     }
 
+    private static VpnResult nullResult(){
+        return new VpnResult("", "", "", "", "", false, false, false, false, 0);
+    }
+    
     private static void saveCaughtPlayer(String addressId, UUID uuid) {
         CaughtPlayersTable log = new CaughtPlayersTable();
         log.bound_address_id = addressId;

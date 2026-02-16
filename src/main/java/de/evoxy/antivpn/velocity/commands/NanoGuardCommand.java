@@ -8,7 +8,9 @@ import de.evoxy.antivpn.NanoGuardMain;
 import de.evoxy.antivpn.config.DefaultConfig;
 import de.evoxy.antivpn.database.BlockedAddressesTable;
 import de.evoxy.antivpn.database.WhitelistedTable;
+import de.evoxy.antivpn.papermc.NanoGuardPaperMain;
 import de.evoxy.flux.query.Query;
+import de.evoxy.flux.stores.DataStore;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
@@ -74,6 +76,43 @@ public class NanoGuardCommand implements SimpleCommand {
                 return;
             } else if(args[0].equalsIgnoreCase("reload")){
                 NanoGuardMain.getInstance().setConfigConfigManager(NanoGuardMain.getInstance().getConfigConfigManager());
+            }
+        } else if(args.length == 2){
+            if (args[0].equalsIgnoreCase("whitelist")) {
+                if(args[1].equalsIgnoreCase("list")){
+                    invocation.source().sendMessage(message.deserialize(defaultConfig.prefix + " <#5555ff>Whitelisted Entries:</#5555ff>"));
+                    new Query<>(WhitelistedTable.class, NanoGuardMain.getInstance().getDataStore()).execute().forEach(entry -> {
+                        invocation.source().sendMessage(message.deserialize("<#aaaaaa>" + entry.type + "</#aaaaaa>: <blue>" + entry.value + "</blue>"));
+                    });
+                }
+            }
+        } else if(args.length == 3){
+            if (args[0].equalsIgnoreCase("whitelist") && args[1].equalsIgnoreCase("remove")) {
+                DataStore dataStore = NanoGuardPaperMain.getInstance().getDataStore();
+                Query<WhitelistedTable> query = new Query<>(WhitelistedTable.class, dataStore).where("value", args[2]);
+                List<WhitelistedTable> entries = query.execute();
+
+                if (entries.isEmpty()) {
+                    invocation.source().sendMessage(message.deserialize(defaultConfig.prefix + " <#ff5555>No whitelist entry found for value: " + args[2] + "</#ff5555>"));
+                } else {
+                    query.delete();
+                    invocation.source().sendMessage(message.deserialize(defaultConfig.prefix + " <#55ff55>Whitelist entry removed for value: " + args[2] + "</#55ff55>"));
+                }
+
+            } else if(args[0].equalsIgnoreCase("whitelist") && args[1].equalsIgnoreCase("add")) {
+                String type = "NAME";
+                if(args[2].matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")){
+                    type = "UUID";
+                } else if(args[2].matches("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.(?!$)|$){4}$")){
+                    type = "IP";
+                }
+
+                WhitelistedTable entry = new WhitelistedTable();
+                entry.type = type;
+                entry.value = args[2];
+
+                NanoGuardPaperMain.getInstance().getDataStore().save(entry);
+                invocation.source().sendMessage(message.deserialize(defaultConfig.prefix + " <#55ff55>Whitelist entry added for value: " + args[2] + "</#55ff55>"));
             }
         }
 

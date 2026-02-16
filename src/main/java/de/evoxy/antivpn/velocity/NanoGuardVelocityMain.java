@@ -20,6 +20,7 @@ public class NanoGuardVelocityMain {
 
     private final NanoGuardMain nanoGuardMain;
 
+
     @Inject
     public NanoGuardVelocityMain(ProxyServer proxyServer, Logger logger){
         this.proxyServer = proxyServer;
@@ -27,9 +28,10 @@ public class NanoGuardVelocityMain {
 
         instance = this;
 
-        this.nanoGuardMain = new NanoGuardMain();
+         this.nanoGuardMain = new NanoGuardMain();
 
         logger.info("NanoGuard for Velocity has been enabled!");
+
     }
 
     @Subscribe

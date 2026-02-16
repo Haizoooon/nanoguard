@@ -4,6 +4,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.evoxy.antivpn.api.NanoPlayer;
+import de.evoxy.antivpn.api.VpnResult;
 import de.evoxy.antivpn.papermc.NanoGuardPaperMain;
 import de.evoxy.antivpn.api.VpnChecker;
 import de.evoxy.antivpn.database.BlockedAddressesTable;
@@ -47,7 +48,7 @@ public class PlayerJoinListener implements Listener {
 
         NanoPlayer nanoPlayer = new NanoPlayer(profile.getId(), profile.getName());
 
-        boolean flagged = VpnChecker.checkVpn(ipAddress, nanoPlayer).join();
+        boolean flagged = VpnChecker.checkVpn(ipAddress, nanoPlayer).join().flagged();
 
         if(!flagged) return;
 

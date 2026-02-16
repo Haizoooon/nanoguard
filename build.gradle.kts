@@ -23,11 +23,7 @@ repositories {
 dependencies {
     implementation("de.evoxy:easyjsonconfig:1.0.1-SNAPSHOT")
     implementation("de.evoxy:fluxsql:1.0.4-SNAPSHOT")
-    implementation("net.kyori:adventure-api:4.26.1")
-    implementation("io.javalin:javalin:6.7.0")
-    implementation("io.jsonwebtoken:jjwt-api:0.13.0")
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.13.0")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.13.0")
+    shadow("net.kyori:adventure-api:4.26.1")
 
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
