@@ -1,0 +1,10 @@
+name: NanoGuard
+version: 1.0.0
+main: de.evoxy.nanoguard.NanoGuardPaperMain
+author: Haizon
+api-version: 1.21.11
+paper-plugin-loader: de.evoxy.nanoguard.loader.PluginDependencyLoader
+
+commands:
+    nanoguard:
+        description: Main command for NanoGuard

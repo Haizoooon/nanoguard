@@ -1,0 +1,31 @@
+{
+  "content": "",
+  "tts": false,
+  "embeds": [
+    {
+      "id": 652627557,
+      "title": "A player was caught using a vpn or proxy!",
+      "color": 15409955,
+      "fields": [
+        {
+          "id": 953618564,
+          "name": "Username",
+          "value": "%player%",
+          "inline": true
+        },
+        {
+          "id": 806479708,
+          "name": "IP-Address",
+          "value": "%address%",
+          "inline": true
+        }
+      ],
+      "author": {
+        "name": "NanoGuard"
+      }
+    }
+  ],
+  "components": [],
+  "actions": {},
+  "flags": 0
+}
