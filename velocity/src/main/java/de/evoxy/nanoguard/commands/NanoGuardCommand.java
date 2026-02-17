@@ -31,6 +31,7 @@ public class NanoGuardCommand implements SimpleCommand {
             source.sendMessage(message.deserialize(defaultConfig.prefix + " <rainbow>NanoGuard</rainbow> <#aaaaaa>Plugin by Haizon</#aaaaaa> <#5555ff>v1.0.0</#5555ff>"));
             source.sendMessage(Component.text());
             source.sendMessage(message.deserialize("<#555555>/<#aaaaaa>nanoguard notify <#5555ff>Activate/deactivate notifications"));
+            source.sendMessage(message.deserialize("<#555555>/<#aaaaaa>nanoguard reload <#5555ff>Reload the configuration"));
             source.sendMessage(message.deserialize("<#555555>/<#aaaaaa>nanoguard blocked <#5555ff>List all blocked IP addresses"));
             source.sendMessage(message.deserialize("<#555555>/<#aaaaaa>nanoguard whitelist <list/add/remove> <#5555ff>Whitelist an IP address, UUID or player name"));
             source.sendMessage(Component.text());
